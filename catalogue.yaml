@@ -8,8 +8,8 @@
 
   - name: install node js
     ansible.builtin.dnf:
-     name: node js
-     state: present
+      name: nodejs
+      state: present
 
   - name: create system user
     ansible.builtin.user:
