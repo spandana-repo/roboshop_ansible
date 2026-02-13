@@ -59,10 +59,21 @@
     - item.item == "frontend"
     - action == create
 
+  - name: delete r53 records
+    amazon.aws.route53:
+      state: absent
+      zone: "{{domain_name}}"
+      record: "{{item}}-{{env}}.{{domain_name}}" #roboshop-dev.devsecops2026.online 
+      type: A 
+      ttl: 1
+    loop: "{{instances}}"
+    when: action == "destroy"
+
   - name: delete instance
     amazon.aws.ec2_instance:
       state: absent
       name: "{{item}}-{{env}}"
     loop: "{{ instances}}"
+    when: action == "destroy"
 
 
