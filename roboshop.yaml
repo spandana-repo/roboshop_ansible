@@ -6,6 +6,7 @@
     ami_id: ami-0220d79f3f480ecf5
     env: dev
     domain_name: devsecops2026.online
+    action: create
     instances:
     - mongodb
     - catalogue
@@ -23,10 +24,13 @@
         name: "{{item}}"
     loop: "{{instances}}"
     register: ec2_output
+    when: action == create
 
   - name: print the ec2_output
     ansible.builtin.debug:
       msg: "{{ec2_output}}"
+    when: action == create
+
 
   - name: create r53 records
     amazon.aws.route53:
@@ -38,6 +42,7 @@
       value: "{{ item.instances[0].private_ip_address }}"
       wait: true
     loop: "{{ ec2_output.results }}"
+    when: action == create
 
   
   - name: create r53 records
@@ -50,5 +55,14 @@
       value: "{{ item.instances[0].public_ip_address }}"
       wait: true
     loop: "{{ ec2_output.results }}"
-    when: item.item==frontend
+    when: 
+    - item.item == "frontend"
+    - action == create
+
+  - name: delete instance
+    amazon.aws.ec2_instance:
+      state: absent
+      name: "{{item}}-{{env}}"
+    loop: "{{ instances}}"
+
 
