@@ -22,11 +22,11 @@
         Env: "{{env}}"
         name: "{{item}}"
     loop: "{{instances}}"
-    register: ec2_output
+    register: ec2-output
 
   - name: print the ec2_output
     ansible.builtin.debug:
-      msg: "{{ec2_output}}"
+      msg: "{{ec2-output}}"
 
   - name: create r53 records
     amazon.aws.route53:
