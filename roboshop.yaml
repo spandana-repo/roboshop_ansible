@@ -22,11 +22,11 @@
         Env: "{{env}}"
         name: "{{item}}"
     loop: "{{instances}}"
-    register: ec2-output
+    register: ec2_output
 
-  - name: print the ec2-output
+  - name: print the ec2_output
     ansible.builtin.debug:
-      msg: "{{ec2-output}}"
+      msg: "{{ec2_output}}"
 
   - name: create r53 records
     amazon.aws.route53:
@@ -37,5 +37,5 @@
       ttl: 1
       value: "{{ item.instance[0].private_ip_address }}"
       wait: true
-    loop: "{{ ec2-output.results }}"
+    loop: "{{ ec2_output.results }}"
 
