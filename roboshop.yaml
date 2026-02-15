@@ -73,6 +73,7 @@
     amazon.aws.ec2_instance:
       state: absent
       name: "{{item}}-{{env}}"
+      wait: false #fastly destroy 
     loop: "{{ instances}}"
     when: action == "destroy"
 
